@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Découvrez les collections de mobilier d’intérieur Inova pour le salon, la salle à manger et la chambre."
+    />
+    <meta name="theme-color" content="#f7f5f0" />
+    <title>Collections de mobilier — Inova</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html#accueil" aria-label="Inova, accueil">
+        <img class="brand-logo" src="logo-inova-home.png" alt="Inova Home — L’élégance prend place" />
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Ouvrir le menu"
+      >
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="Navigation principale">
+        <a href="index.html#univers">Nos collections</a>
+        <a href="index.html#assistant">Conseiller mobilier</a>
+        <a href="index.html#maison">La maison</a>
+        <a href="index.html#contact">Contact</a>
+        <a class="nav-cta" href="index.html#contact">Parlons de votre projet <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main class="category-main">
+      <section class="category-heading section-wrap" aria-labelledby="category-title">
+        <nav class="breadcrumbs" aria-label="Fil d’Ariane">
+          <a href="index.html">Accueil</a>
+          <span aria-hidden="true">/</span>
+          <a href="index.html#univers">Nos univers</a>
+          <span aria-hidden="true">/</span>
+          <span id="breadcrumb-current">Collection</span>
+        </nav>
+        <p class="eyebrow"><span></span> Spécialiste du mobilier d’intérieur</p>
+        <h1 id="category-title">Nos collections</h1>
+        <p class="category-description" id="category-description">
+          Découvrez nos meubles et trouvez ceux qui correspondent à votre pièce, à votre style et à votre budget.
+        </p>
+      </section>
+
+      <nav class="category-tabs section-wrap" aria-label="Catégories de mobilier">
+        <a href="categorie.html?category=salon" data-category="salon">Salon</a>
+        <a href="categorie.html?category=salle-a-manger" data-category="salle-a-manger">Salle à manger</a>
+        <a href="categorie.html?category=chambre" data-category="chambre">Chambre</a>
+      </nav>
+
+      <section class="category-gallery section-wrap" id="category-gallery" aria-label="Inspirations de la collection">
+        <p class="category-error" id="category-error" hidden>
+          Cette catégorie n’existe pas. <a href="index.html#univers">Voir nos univers</a>
+        </p>
+      </section>
+
+      <section class="category-contact">
+        <p class="eyebrow eyebrow-light"><span></span> À la recherche d’un meuble ?</p>
+        <h2>Trouvons le mobilier<br /><em>qu’il vous faut.</em></h2>
+        <a class="button button-light" href="index.html#contact">Contacter Inova <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand footer-brand" href="index.html#accueil">
+        <img class="brand-logo" src="logo-inova-home.png" alt="Inova Home — L’élégance prend place" />
+      </a>
+      <p>Spécialiste du mobilier d’intérieur.</p>
+      <a href="index.html#univers" class="back-to-top">Nos univers ↑</a>
+      <nav class="footer-legal" aria-label="Informations juridiques">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="confidentialite.html">Confidentialité</a>
+      </nav>
+      <span class="copyright">© <span id="year"></span> Inova</span>
+    </footer>
+  </body>
+</html>
