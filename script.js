@@ -168,6 +168,7 @@ if (advisorForm) {
       furnitureAdvice[answers.furniture],
     ];
     let dimensions = "Sans dimensions renseignées, prenez les mesures de la pièce, des portes et des passages avant de choisir.";
+    const formatMeasure = (measure) => new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 }).format(measure);
     if (hasWidth && hasLength) {
       const width = Number(answers.width);
       const length = Number(answers.length);
@@ -176,13 +177,15 @@ if (advisorForm) {
       }
 
       const area = width * length;
-      const formattedArea = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 }).format(area);
+      const formattedArea = formatMeasure(area);
+      const formattedWidth = formatMeasure(width);
+      const formattedLength = formatMeasure(length);
       const roomSize = area < 12
         ? "La pièce semble compacte : favorisez des meubles peu profonds et multifonctions."
         : area <= 24
           ? "La surface permet de composer un ensemble équilibré ; gardez des passages dégagés."
           : "La surface offre de la flexibilité : structurez l’espace en zones sans multiplier les meubles.";
-      dimensions = `Pour ${formattedArea} m² estimés (${answers.width} m × ${answers.length} m), ${roomSize.toLowerCase()}`;
+      dimensions = `Pour ${formattedArea} m² estimés (${formattedWidth} m × ${formattedLength} m), ${roomSize.toLowerCase()}`;
       tips.unshift(`Surface indicative : ${formattedArea} m². Vérifiez aussi les ouvertures et les passages.`);
     }
 
@@ -193,7 +196,7 @@ if (advisorForm) {
       message: [
         "Bonjour Inova, je souhaite être conseillé(e) pour un projet de mobilier d’intérieur.",
         `Pièce : ${advice.label}.`,
-        ...(hasWidth && hasLength ? [`Dimensions approximatives : ${answers.width} m × ${answers.length} m.`] : []),
+        ...(hasWidth && hasLength ? [`Dimensions approximatives : ${formatMeasure(Number(answers.width))} m × ${formatMeasure(Number(answers.length))} m.`] : []),
         `Style souhaité : ${answerLabels.style[answers.style]}.`,
         `Budget envisagé : ${answerLabels.budget[answers.budget]}.`,
         `Usage : ${answerLabels.usage[answers.usage]}.`,
