@@ -62,8 +62,17 @@ if (leadDialog instanceof HTMLDialogElement && leadForm instanceof HTMLFormEleme
   }
 
   if (!wasShownThisSession) {
-    leadDialog.showModal();
+    if (typeof HTMLDialogElement !== "undefined" && "showModal" in HTMLDialogElement.prototype) {
+      leadDialog.showModal();
+    } else {
+      leadDialog.setAttribute("open", "open");
+    }
+    document.documentElement.classList.add("has-lead-dialog");
   }
+
+  leadDialog.addEventListener("close", () => {
+    document.documentElement.classList.remove("has-lead-dialog");
+  });
 
   leadDialog.querySelectorAll("[data-lead-close]").forEach((button) => {
     button.addEventListener("click", () => leadDialog.close());
@@ -122,7 +131,12 @@ if (leadDialog instanceof HTMLDialogElement && leadForm instanceof HTMLFormEleme
         status.textContent = "Merci, votre demande a bien été transmise à l’équipe Inova.";
         status.hidden = false;
         leadForm.reset();
-        window.setTimeout(() => leadDialog.close(), 1800);
+        window.setTimeout(() => {
+          if (typeof leadDialog.close === "function") {
+            leadDialog.close();
+          }
+          window.location.assign("/#accueil");
+        }, 900);
       })
       .catch((error) => {
         status.textContent = error instanceof Error
