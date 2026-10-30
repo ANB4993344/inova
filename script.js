@@ -111,7 +111,7 @@ if (leadDialog instanceof HTMLDialogElement && leadForm instanceof HTMLFormEleme
         try {
           result = JSON.parse(responseBody);
         } catch {
-          throw new Error("Le serveur ne traite pas contact.php en PHP. Déployez le site sur un hébergement compatible PHP avec HTTPS pour activer l’envoi Telegram.");
+          throw new Error("Le point d’envoi Netlify ne répond pas correctement. Vérifiez le déploiement de la fonction de contact puis réessayez.");
         }
         if (!response.ok) {
           throw new Error(result.error || "Votre demande n’a pas pu être envoyée. Réessayez plus tard.");
