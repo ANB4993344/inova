@@ -21,7 +21,7 @@
   <body>
     <header class="site-header">
       <a class="brand" href="#accueil" aria-label="Inova, accueil">
-        <img class="brand-logo" src="logo-inova-home.png" alt="Inova Home — L’élégance prend place" />
+        <span class="brand-name"><strong>inova</strong></span>
       </a>
 
       <button
@@ -94,16 +94,24 @@
           </div>
 
           <div class="advisor-panel">
-            <div class="advisor-panel-heading">
+            <button
+              class="advisor-panel-heading"
+              id="advisor-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="advisor-content"
+            >
               <span class="advisor-avatar" aria-hidden="true">IN</span>
               <div>
                 <p>Votre conseiller mobilier Inova</p>
                 <span>Un diagnostic guidé, étape par étape</span>
               </div>
               <span class="advisor-status"><span></span> Conseil personnalisé</span>
-            </div>
+              <span class="advisor-toggle-icon" aria-hidden="true">＋</span>
+            </button>
 
-            <form class="advisor-form" id="advisor-form">
+            <div class="advisor-content" id="advisor-content" hidden>
+              <form class="advisor-form" id="advisor-form">
               <label>
                 Quelle pièce souhaitez-vous meubler ?
                 <select name="room" required>
@@ -188,24 +196,25 @@
               <p class="advisor-error" id="advisor-error" role="alert" hidden>
                 Vérifiez vos réponses. Pour les dimensions, indiquez largeur et longueur entre 1 et 30 mètres, ou laissez les deux champs vides.
               </p>
-            </form>
+              </form>
 
-            <section
-              class="advisor-result"
-              id="advisor-result"
-              aria-live="polite"
-              aria-labelledby="advisor-result-title"
-              hidden
-            >
-              <p class="eyebrow"><span></span> Votre feuille de route mobilier</p>
-              <h3 id="advisor-result-title"></h3>
-              <p id="advisor-result-summary"></p>
-              <ul id="advisor-result-tips"></ul>
-              <a class="button advisor-result-contact" id="advisor-result-contact" href="#contact">
-                Continuer avec Inova <span aria-hidden="true">↗</span>
-              </a>
-              <button class="advisor-restart" id="advisor-restart" type="button">Modifier mes réponses</button>
-            </section>
+              <section
+                class="advisor-result"
+                id="advisor-result"
+                aria-live="polite"
+                aria-labelledby="advisor-result-title"
+                hidden
+              >
+                <p class="eyebrow"><span></span> Votre feuille de route mobilier</p>
+                <h3 id="advisor-result-title"></h3>
+                <p id="advisor-result-summary"></p>
+                <ul id="advisor-result-tips"></ul>
+                <a class="button advisor-result-contact" id="advisor-result-contact" href="#contact">
+                  Continuer avec Inova <span aria-hidden="true">↗</span>
+                </a>
+                <button class="advisor-restart" id="advisor-restart" type="button">Modifier mes réponses</button>
+              </section>
+            </div>
           </div>
         </div>
       </section>
@@ -299,7 +308,7 @@
 
     <footer class="site-footer">
       <a class="brand footer-brand" href="#accueil">
-        <img class="brand-logo" src="logo-inova-home.png" alt="Inova Home — L’élégance prend place" />
+        <span class="brand-name"><strong>inova</strong></span>
       </a>
       <p>Spécialiste du mobilier d’intérieur.</p>
       <a href="#accueil" class="back-to-top">Retour en haut ↑</a>

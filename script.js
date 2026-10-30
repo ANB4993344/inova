@@ -24,27 +24,24 @@ if (year) {
   year.textContent = String(new Date().getFullYear());
 }
 
-const floatingLogo = document.createElement("a");
-floatingLogo.className = "floating-logo";
-floatingLogo.href = window.location.pathname.endsWith("index.html") || window.location.pathname.endsWith("/")
-  ? "#assistant"
-  : "index.html#assistant";
-floatingLogo.setAttribute("aria-label", "Ouvrir le Conseil mobilier Inova");
-const floatingLogoImage = document.createElement("img");
-floatingLogoImage.src = "logo-inova-home.png";
-floatingLogoImage.alt = "";
-floatingLogoImage.width = 1152;
-floatingLogoImage.height = 768;
-floatingLogoImage.loading = "lazy";
-floatingLogo.append(floatingLogoImage);
-const floatingLogoLabel = document.createElement("span");
-floatingLogoLabel.textContent = "Conseil mobilier Inova";
-floatingLogo.append(floatingLogoLabel);
-document.body.append(floatingLogo);
-
 const advisorForm = document.querySelector("#advisor-form");
 
 if (advisorForm) {
+  const advisorPanel = document.querySelector(".advisor-panel");
+  const advisorToggle = document.querySelector("#advisor-toggle");
+  const advisorContent = document.querySelector("#advisor-content");
+
+  if (advisorPanel && advisorToggle && advisorContent) {
+    advisorPanel.classList.add("is-floating");
+    advisorPanel.parentElement?.classList.add("is-widget-layout");
+    advisorToggle.addEventListener("click", () => {
+      const isExpanded = advisorToggle.getAttribute("aria-expanded") === "true";
+      advisorToggle.setAttribute("aria-expanded", String(!isExpanded));
+      advisorContent.hidden = isExpanded;
+      advisorPanel.classList.toggle("is-open", !isExpanded);
+    });
+  }
+
   const roomAdvice = {
     salon: {
       label: "votre salon",
