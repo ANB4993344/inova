@@ -1,0 +1,5 @@
+<?php
+return [
+    'bot_token' => '9244785465:AAF5Gn7ZHjaIYsWRGlDtFC8Xu2t7LDAjGXo',
+    'chat_id' => '8677631406',
+];

@@ -54,6 +54,53 @@
       </nav>
     </header>
 
+    <dialog class="lead-dialog" id="lead-dialog" aria-labelledby="lead-dialog-title" aria-describedby="lead-dialog-description">
+      <div class="lead-dialog-header">
+        <div>
+          <p class="eyebrow"><span></span> Parlons de votre projet</p>
+          <h2 id="lead-dialog-title">Comment pouvons-nous vous aider ?</h2>
+        </div>
+        <button class="lead-dialog-close" type="button" aria-label="Fermer le formulaire" data-lead-close>×</button>
+      </div>
+      <p class="lead-dialog-description" id="lead-dialog-description">
+        Laissez vos coordonnées pour que l’équipe Inova puisse vous répondre. Le formulaire s’affiche une fois par session.
+      </p>
+      <form class="lead-form" id="lead-form" action="contact.php" method="post">
+        <label>
+          Nom
+          <input name="lastName" autocomplete="family-name" required />
+        </label>
+        <label>
+          Prénom
+          <input name="firstName" autocomplete="given-name" required />
+        </label>
+        <label>
+          Adresse e-mail
+          <input name="email" type="email" autocomplete="email" required />
+        </label>
+        <label>
+          Numéro de téléphone
+          <input name="phone" type="tel" autocomplete="tel" required />
+        </label>
+        <label class="lead-message-field">
+          Votre projet <span>(facultatif)</span>
+          <textarea name="message" rows="3" maxlength="1000"></textarea>
+        </label>
+        <label class="lead-consent">
+          <input name="consent" type="checkbox" required />
+          <span>
+            J’accepte que mes coordonnées soient transmises à Inova via Telegram pour répondre à ma demande.
+            <a href="confidentialite.html" target="_blank" rel="noopener noreferrer">En savoir plus</a>
+          </span>
+        </label>
+        <p class="lead-form-note" id="lead-form-status" role="status" aria-live="polite" hidden></p>
+        <div class="lead-form-actions">
+          <button class="button lead-form-submit" type="submit">Commencer</button>
+        </div>
+        <p class="lead-form-footnote">Vos coordonnées sont envoyées à Inova par Telegram de façon sécurisée et utilisées pour répondre à votre demande. Voir notre <a href="confidentialite.html">politique de confidentialité</a>.</p>
+      </form>
+    </dialog>
+
     <main id="contenu">
       <section class="hero" id="accueil">
         <div class="hero-text">
@@ -66,6 +113,9 @@
           <div class="hero-actions">
             <a class="button" href="https://wa.me/33665201297?text=Bonjour%20Inova%2C%20je%20cherche%20du%20mobilier%20d'int%C3%A9rieur%20et%20souhaite%20%C3%AAtre%20renseign%C3%A9(e)." target="_blank" rel="noreferrer">Parler à un conseiller <span aria-hidden="true">↗</span></a>
             <a class="button button-ghost" href="#univers">Voir nos collections</a>
+            <a class="button button-ghost" href="Presentation-Inova.pdf" download="Presentation-Inova.pdf">
+              Télécharger la présentation PDF <span aria-hidden="true">↓</span>
+            </a>
           </div>
           <ul class="hero-proof">
             <li>Une réponse personnalisée de l’équipe Inova</li>
@@ -264,6 +314,51 @@
           <span class="card-number">03 / Le calme retrouvé</span>
           <span class="card-caption"><span>La chambre</span><span class="card-arrow" aria-hidden="true">↗</span></span>
         </a>
+      </section>
+
+      <section class="suppliers section-wrap" aria-labelledby="suppliers-title">
+        <div class="suppliers-heading">
+          <p class="eyebrow"><span></span> Nos pistes professionnelles</p>
+          <h2 id="suppliers-title">Fournisseurs de inova.</h2>
+          <p>
+            Une sélection de marques et grossistes à étudier pour les collections Inova.
+            Les partenariats et conditions commerciales restent à confirmer.
+          </p>
+        </div>
+        <div class="supplier-grid" aria-label="Sites officiels des fournisseurs">
+          <a class="supplier-card" href="https://www.rousseau.be/fr" target="_blank" rel="noopener noreferrer" aria-label="Rousseau, site officiel">
+            <img src="images/partners/rousseau.svg" alt="" loading="lazy" />
+            <span>Rousseau</span>
+          </a>
+          <a class="supplier-card" href="https://furnex.eu/" target="_blank" rel="noopener noreferrer" aria-label="Furnex, site officiel">
+            <img src="images/partners/furnex.png" alt="" loading="lazy" />
+            <span>FURNEX</span>
+          </a>
+          <a class="supplier-card" href="https://artisanfurniture.eu/fr/dropshipping/" target="_blank" rel="noopener noreferrer" aria-label="Artisan Furniture, site officiel">
+            <img src="images/partners/artisan-furniture.png" alt="" loading="lazy" />
+            <span>Artisan Furniture</span>
+          </a>
+          <a class="supplier-card" href="https://www.beliani.fr/content/dropshipping/" target="_blank" rel="noopener noreferrer" aria-label="Beliani, site officiel">
+            <img src="images/partners/beliani.svg" alt="" loading="lazy" />
+            <span>Beliani</span>
+          </a>
+          <a class="supplier-card" href="https://www.aosom.fr/" target="_blank" rel="noopener noreferrer" aria-label="Aosom France, site officiel">
+            <span class="supplier-text-logo supplier-text-logo-aosom" aria-hidden="true">AOSOM</span>
+            <span>Aosom</span>
+          </a>
+          <a class="supplier-card supplier-card-fortrade" href="https://www.fortrade.si/en_US/" target="_blank" rel="noopener noreferrer" aria-label="Fortrade, site officiel">
+            <img src="images/partners/fortrade.svg" alt="" loading="lazy" />
+            <span>Fortrade</span>
+          </a>
+          <a class="supplier-card" href="https://www.opjet.com/" target="_blank" rel="noopener noreferrer" aria-label="OPJET Paris, site officiel">
+            <img src="images/partners/opjet.png" alt="" loading="lazy" />
+            <span>OPJET Paris</span>
+          </a>
+          <a class="supplier-card" href="https://kjmeble.com/" target="_blank" rel="noopener noreferrer" aria-label="KJ MEBLE, site officiel">
+            <img src="images/partners/kj-meble.png" alt="" loading="lazy" />
+            <span>KJ MEBLE</span>
+          </a>
+        </div>
       </section>
 
       <section class="steps section-wrap" id="methode">

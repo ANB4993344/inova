@@ -45,6 +45,97 @@ if (year) {
   year.textContent = String(new Date().getFullYear());
 }
 
+const leadDialog = document.querySelector("#lead-dialog");
+const leadForm = document.querySelector("#lead-form");
+
+if (leadDialog instanceof HTMLDialogElement && leadForm instanceof HTMLFormElement) {
+  const sessionKey = "inova-lead-dialog-seen";
+  let wasShownThisSession = false;
+
+  try {
+    wasShownThisSession = window.sessionStorage.getItem(sessionKey) === "true";
+    if (!wasShownThisSession) {
+      window.sessionStorage.setItem(sessionKey, "true");
+    }
+  } catch (error) {
+    console.warn("Impossible de mémoriser l’affichage du formulaire pour cette session.", error);
+  }
+
+  if (!wasShownThisSession) {
+    leadDialog.showModal();
+  }
+
+  leadDialog.querySelectorAll("[data-lead-close]").forEach((button) => {
+    button.addEventListener("click", () => leadDialog.close());
+  });
+
+  leadDialog.addEventListener("click", (event) => {
+    if (event.target === leadDialog) {
+      leadDialog.close();
+    }
+  });
+
+  leadForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!leadForm.reportValidity()) {
+      return;
+    }
+
+    const formData = new FormData(leadForm);
+    const status = leadForm.querySelector("#lead-form-status");
+    const submitButton = leadForm.querySelector('button[type="submit"]');
+    const request = {
+      lastName: String(formData.get("lastName")).trim(),
+      firstName: String(formData.get("firstName")).trim(),
+      email: String(formData.get("email")).trim(),
+      phone: String(formData.get("phone")).trim(),
+      message: String(formData.get("message")).trim(),
+      consent: formData.get("consent") === "on",
+    };
+
+    if (!(status instanceof HTMLElement) || !(submitButton instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    status.hidden = true;
+    submitButton.disabled = true;
+
+    fetch(leadForm.action, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    })
+      .then(async (response) => {
+        const responseBody = await response.text();
+        let result;
+        try {
+          result = JSON.parse(responseBody);
+        } catch {
+          throw new Error("Le serveur ne traite pas contact.php en PHP. Déployez le site sur un hébergement compatible PHP avec HTTPS pour activer l’envoi Telegram.");
+        }
+        if (!response.ok) {
+          throw new Error(result.error || "Votre demande n’a pas pu être envoyée. Réessayez plus tard.");
+        }
+        return result;
+      })
+      .then(() => {
+        status.textContent = "Merci, votre demande a bien été transmise à l’équipe Inova.";
+        status.hidden = false;
+        leadForm.reset();
+        window.setTimeout(() => leadDialog.close(), 1800);
+      })
+      .catch((error) => {
+        status.textContent = error instanceof Error
+          ? error.message
+          : "Une erreur inattendue empêche l’envoi. Réessayez plus tard.";
+        status.hidden = false;
+      })
+      .finally(() => {
+        submitButton.disabled = false;
+      });
+  });
+}
+
 const advisorForm = document.querySelector("#advisor-form");
 
 if (advisorForm) {
