@@ -270,14 +270,22 @@ if (advisorForm) {
   });
 }
 
-const categoryGallery = document.querySelector("#category-gallery");
+const createInspirations = (existing, styles, furniture) => [
+  ...existing,
+  ...styles.flatMap((style, styleIndex) =>
+    furniture.map((item, itemIndex) => [
+      `${style} — ${item}`,
+      existing[(styleIndex * furniture.length + itemIndex) % existing.length][1],
+    ]),
+  ),
+];
 
-if (categoryGallery) {
-  const categories = {
-    salon: {
-      title: "Le salon",
-      description: "Explorez des inspirations de mobilier pour le salon : assises, tables basses et rangements. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
-      inspirations: [
+const categories = {
+  salon: {
+    title: "Le salon",
+    description: "Explorez des inspirations de mobilier pour le salon : assises, tables basses et rangements. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
+    inspirations: createInspirations(
+      [
         ["Salon convivial", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
         ["Lignes contemporaines", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"],
         ["Matières naturelles", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
@@ -288,11 +296,15 @@ if (categoryGallery) {
         ["Fauteuil de lecture", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1000&q=85"],
         ["Rangements épurés", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1000&q=85"],
       ],
-    },
-    "salle-a-manger": {
-      title: "La salle à manger",
-      description: "Explorez des inspirations pour la salle à manger et repérez les meubles adaptés à votre espace. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
-      inspirations: [
+      ["Contemporain", "Naturel", "Intemporel", "Minimaliste", "Cosy", "Méditerranéen", "Élégant", "Urbain", "Lumineux", "Graphique"],
+      ["avec canapé", "avec fauteuil", "autour de la table basse", "avec meuble TV", "avec bibliothèque"],
+    ),
+  },
+  "salle-a-manger": {
+    title: "La salle à manger",
+    description: "Explorez des inspirations pour la salle à manger et repérez les meubles adaptés à votre espace. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
+    inspirations: createInspirations(
+      [
         ["Repas en lumière", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"],
         ["Table de caractère", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
         ["Matières chaleureuses", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
@@ -303,11 +315,15 @@ if (categoryGallery) {
         ["Buffet en bois clair", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
         ["Chaises contemporaines", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85"],
       ],
-    },
-    chambre: {
-      title: "La chambre",
-      description: "Explorez des inspirations de mobilier pour la chambre : lits, tables de chevet et rangements. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
-      inspirations: [
+      ["Contemporaine", "Naturelle", "Familiale", "Intemporelle", "Élégante", "Méditerranéenne", "Minimaliste", "Chaleureuse", "Modulable", "Raffinée"],
+      ["avec table à manger", "avec chaises", "avec buffet", "avec vaisselier", "pour recevoir"],
+    ),
+  },
+  chambre: {
+    title: "La chambre",
+    description: "Explorez des inspirations de mobilier pour la chambre : lits, tables de chevet et rangements. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
+    inspirations: createInspirations(
+      [
         ["Douceur naturelle", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85"],
         ["Repos tout en simplicité", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
         ["Tons chaleureux", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
@@ -318,8 +334,15 @@ if (categoryGallery) {
         ["Chevets tout en douceur", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85"],
         ["Rangements de chambre", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1000&q=85"],
       ],
-    },
-  };
+      ["Naturelle", "Apaisante", "Contemporaine", "Intemporelle", "Douce", "Élégante", "Minimaliste", "Cosy", "Lumineuse", "Méditerranéenne"],
+      ["avec lit", "avec tables de chevet", "avec commode", "avec armoire", "avec tête de lit"],
+    ),
+  },
+};
+
+const categoryGallery = document.querySelector("#category-gallery");
+
+if (categoryGallery) {
   const categoryKey = new URLSearchParams(window.location.search).get("category");
   const category = categoryKey ? categories[categoryKey] : undefined;
   const categoryTitle = document.querySelector("#category-title");
@@ -400,55 +423,11 @@ if (categoryGallery) {
 const productDetails = document.querySelector("#product-details");
 
 if (productDetails) {
-  const categories = {
-    salon: {
-      title: "Le salon",
-      products: [
-        ["Salon convivial", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85"],
-        ["Lignes contemporaines", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85"],
-        ["Matières naturelles", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85"],
-        ["Lumière et douceur", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1400&q=85"],
-        ["Élégance intemporelle", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85"],
-        ["Un coin à soi", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1400&q=85"],
-        ["Canapé aux lignes douces", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85"],
-        ["Fauteuil de lecture", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1400&q=85"],
-        ["Rangements épurés", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1400&q=85"],
-      ],
-    },
-    "salle-a-manger": {
-      title: "La salle à manger",
-      products: [
-        ["Repas en lumière", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85"],
-        ["Table de caractère", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85"],
-        ["Matières chaleureuses", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85"],
-        ["Esprit contemporain", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1400&q=85"],
-        ["Réception élégante", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85"],
-        ["L’art de recevoir", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1400&q=85"],
-        ["Table conviviale", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1400&q=85"],
-        ["Buffet en bois clair", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85"],
-        ["Chaises contemporaines", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1400&q=85"],
-      ],
-    },
-    chambre: {
-      title: "La chambre",
-      products: [
-        ["Douceur naturelle", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1400&q=85"],
-        ["Repos tout en simplicité", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1400&q=85"],
-        ["Tons chaleureux", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85"],
-        ["Lumière du matin", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85"],
-        ["Un cocon élégant", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85"],
-        ["Sérénité au quotidien", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1400&q=85"],
-        ["Lit aux tons naturels", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85"],
-        ["Chevets tout en douceur", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1400&q=85"],
-        ["Rangements de chambre", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1400&q=85"],
-      ],
-    },
-  };
   const params = new URLSearchParams(window.location.search);
   const categoryKey = params.get("category");
   const productNumber = Number(params.get("product"));
   const category = categoryKey ? categories[categoryKey] : undefined;
-  const product = category && Number.isInteger(productNumber) ? category.products[productNumber - 1] : undefined;
+  const product = category && Number.isInteger(productNumber) ? category.inspirations[productNumber - 1] : undefined;
   const errorMessage = document.querySelector("#product-error");
   const relatedSection = document.querySelector(".related-section");
 
@@ -510,7 +489,7 @@ if (productDetails) {
       productContact.href = `https://wa.me/33665201297?text=${encodeURIComponent(`Bonjour Inova, cette inspiration mobilier m'intéresse (${reference}). Pouvez-vous m'indiquer les meubles disponibles, leurs dimensions et leurs prix ?`)}`;
     }
 
-    category.products.forEach(([relatedName, relatedImage], index) => {
+    category.inspirations.forEach(([relatedName, relatedImage], index) => {
       if (index + 1 === productNumber || relatedProducts.children.length >= 4) {
         return;
       }
