@@ -284,6 +284,9 @@ if (categoryGallery) {
         ["Lumière et douceur", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85"],
         ["Élégance intemporelle", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85"],
         ["Un coin à soi", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1000&q=85"],
+        ["Canapé aux lignes douces", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
+        ["Fauteuil de lecture", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1000&q=85"],
+        ["Rangements épurés", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1000&q=85"],
       ],
     },
     "salle-a-manger": {
@@ -296,6 +299,9 @@ if (categoryGallery) {
         ["Esprit contemporain", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85"],
         ["Réception élégante", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85"],
         ["L’art de recevoir", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1000&q=85"],
+        ["Table conviviale", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1000&q=85"],
+        ["Buffet en bois clair", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
+        ["Chaises contemporaines", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85"],
       ],
     },
     chambre: {
@@ -308,6 +314,9 @@ if (categoryGallery) {
         ["Lumière du matin", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"],
         ["Un cocon élégant", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85"],
         ["Sérénité au quotidien", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1000&q=85"],
+        ["Lit aux tons naturels", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
+        ["Chevets tout en douceur", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85"],
+        ["Rangements de chambre", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1000&q=85"],
       ],
     },
   };
@@ -329,7 +338,7 @@ if (categoryGallery) {
       categoryTitle.textContent = category.title;
     }
     if (categoryDescription) {
-      categoryDescription.textContent = category.description;
+      categoryDescription.textContent = `${category.description} ${category.inspirations.length} inspirations sont à découvrir.`;
     }
     if (currentBreadcrumb) {
       currentBreadcrumb.textContent = category.title;
@@ -401,6 +410,9 @@ if (productDetails) {
         ["Lumière et douceur", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1400&q=85"],
         ["Élégance intemporelle", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85"],
         ["Un coin à soi", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1400&q=85"],
+        ["Canapé aux lignes douces", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85"],
+        ["Fauteuil de lecture", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1400&q=85"],
+        ["Rangements épurés", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1400&q=85"],
       ],
     },
     "salle-a-manger": {
@@ -412,6 +424,9 @@ if (productDetails) {
         ["Esprit contemporain", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1400&q=85"],
         ["Réception élégante", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85"],
         ["L’art de recevoir", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1400&q=85"],
+        ["Table conviviale", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1400&q=85"],
+        ["Buffet en bois clair", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85"],
+        ["Chaises contemporaines", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1400&q=85"],
       ],
     },
     chambre: {
@@ -423,6 +438,9 @@ if (productDetails) {
         ["Lumière du matin", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=85"],
         ["Un cocon élégant", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=85"],
         ["Sérénité au quotidien", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1400&q=85"],
+        ["Lit aux tons naturels", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1400&q=85"],
+        ["Chevets tout en douceur", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1400&q=85"],
+        ["Rangements de chambre", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1400&q=85"],
       ],
     },
   };
@@ -493,7 +511,7 @@ if (productDetails) {
     }
 
     category.products.forEach(([relatedName, relatedImage], index) => {
-      if (index + 1 === productNumber) {
+      if (index + 1 === productNumber || relatedProducts.children.length >= 4) {
         return;
       }
       const link = document.createElement("a");
