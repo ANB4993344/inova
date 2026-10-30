@@ -7,12 +7,12 @@
       name="description"
       content="Inova est spécialisée dans le mobilier d’intérieur et basée à Nice, en France. Découvrez nos meubles pour le salon, la salle à manger et la chambre."
     />
-    <meta name="theme-color" content="#f7f5f0" />
+    <meta name="theme-color" content="#f3f6f8" />
     <title>Inova — Mobilier et conseil à Nice</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -46,19 +46,34 @@
 
     <main>
       <section class="hero" id="accueil">
-        <div class="hero-image" role="img" aria-label="Rendez-vous conseil autour du mobilier entre des clients et l’équipe Inova"></div>
-        <div class="hero-shade"></div>
-        <div class="hero-content">
-          <p class="eyebrow eyebrow-light"><span></span> Mobilier d’intérieur · Nice, France</p>
-          <h1>Le mobilier<br />qui vous <em>ressemble.</em></h1>
+        <div class="hero-text">
+          <p class="eyebrow"><span></span> Mobilier d’intérieur à Nice</p>
+          <h1>Meublez votre intérieur avec des conseils clairs et personnalisés.</h1>
           <p class="hero-copy">
-            Découvrez nos inspirations de mobilier et bénéficiez de conseils
-            pour choisir les meubles adaptés à votre intérieur.
+            Salon, salle à manger, chambre : Inova vous accompagne dans le choix
+            de meubles adaptés à votre pièce, à votre style et à votre budget.
           </p>
-          <a class="button button-light" href="#univers">Découvrir nos collections <span aria-hidden="true">↓</span></a>
+          <div class="hero-actions">
+            <a class="button" href="https://wa.me/33665201297?text=Bonjour%20Inova%2C%20je%20cherche%20du%20mobilier%20d'int%C3%A9rieur%20et%20souhaite%20%C3%AAtre%20renseign%C3%A9(e)." target="_blank" rel="noreferrer">Parler à un conseiller <span aria-hidden="true">↗</span></a>
+            <a class="button button-ghost" href="#univers">Voir nos collections</a>
+          </div>
+          <ul class="hero-proof">
+            <li>Une réponse personnalisée de l’équipe Inova</li>
+            <li>Dimensions, prix et disponibilités confirmés avant achat</li>
+            <li>Entreprise basée à Nice, France</li>
+          </ul>
         </div>
-        <p class="hero-note">L’élégance du quotidien, depuis Nice</p>
-        <div class="hero-index"><span>01</span> — 03</div>
+        <figure class="hero-photo">
+          <img class="no-zoom" src="rendez-vous-clients.jpg" alt="Rendez-vous conseil entre des clients et un conseiller Inova autour d’une table" />
+          <figcaption><strong>Un rendez-vous, un projet.</strong>Nous prenons le temps d’écouter vos besoins.</figcaption>
+        </figure>
+      </section>
+
+      <section class="trust-bar" aria-label="Nos engagements">
+        <div><strong>Spécialiste du mobilier</strong><span>Salon, salle à manger, chambre</span></div>
+        <div><strong>Conseil personnalisé</strong><span>Selon votre pièce et votre budget</span></div>
+        <div><strong>Réponse rapide</strong><span>Par WhatsApp ou par e-mail</span></div>
+        <div><strong>Basés à Nice</strong><span>Siège social en France</span></div>
       </section>
 
       <section class="intro section-wrap" id="univers">
@@ -249,6 +264,18 @@
         </a>
       </section>
 
+      <section class="steps section-wrap" id="methode">
+        <div class="steps-head">
+          <p class="eyebrow"><span></span> Comment ça se passe</p>
+          <h2>Trois étapes simples pour votre projet.</h2>
+        </div>
+        <div class="steps-grid">
+          <div class="step"><span class="step-num">1</span><h3>Vous décrivez votre projet</h3><p>Pièce, dimensions, style, budget : répondez au conseiller en ligne ou écrivez-nous directement sur WhatsApp.</p></div>
+          <div class="step"><span class="step-num">2</span><h3>Nous vous conseillons</h3><p>L’équipe Inova vous répond avec des idées de mobilier et des conseils adaptés à votre intérieur.</p></div>
+          <div class="step"><span class="step-num">3</span><h3>Vous décidez en confiance</h3><p>Modèles, dimensions, prix et disponibilités sont confirmés avec vous avant tout achat.</p></div>
+        </div>
+      </section>
+
       <section class="quote-band">
         <p class="eyebrow eyebrow-light"><span></span> Notre philosophie</p>
         <blockquote>« Le beau n’a pas besoin d’en faire trop.<br />Il suffit qu’il se sente chez lui. »</blockquote>
@@ -262,7 +289,6 @@
             alt="Détail d’un intérieur chaleureux, entre bois et lumière naturelle"
             loading="lazy"
           />
-          <span class="image-stamp">Des lieux<br />pour vivre</span>
         </div>
         <div class="about-content">
           <p class="eyebrow"><span></span> Notre spécialité</p>

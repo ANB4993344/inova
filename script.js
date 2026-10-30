@@ -583,7 +583,7 @@ const magnifierSize = 176;
 const magnification = 2.2;
 let magnifiedImage = null;
 
-document.querySelectorAll("img").forEach((image) => {
+document.querySelectorAll("img:not(.no-zoom)").forEach((image) => {
   image.classList.add("image-zoomable");
 });
 
@@ -611,7 +611,7 @@ const updateMagnifier = (event) => {
 };
 
 document.addEventListener("pointerover", (event) => {
-  if (event.pointerType !== "mouse" || !(event.target instanceof HTMLImageElement)) {
+  if (event.pointerType !== "mouse" || !(event.target instanceof HTMLImageElement) || event.target.classList.contains("no-zoom")) {
     return;
   }
 
