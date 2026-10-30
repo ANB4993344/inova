@@ -1022,11 +1022,18 @@ h2 em {
   opacity: 0.85;
 }
 
-.related-product span {
+.related-product > span:not(.related-image-status) {
   display: block;
   padding-top: 11px;
   font-family: var(--serif);
   font-size: 16px;
+}
+
+.related-image-status {
+  display: block;
+  padding-top: 6px;
+  color: var(--muted);
+  font-size: 10px;
 }
 
 @media (max-width: 800px) {
@@ -1524,18 +1531,23 @@ h2 em {
   min-width: 0;
 }
 
-.inspiration-image-link {
+.inspiration-product-link {
   display: block;
-  overflow: hidden;
-  background: #e8e5dc;
+  color: inherit;
 }
 
-.inspiration-image-link > img {
+.inspiration-product-link > img {
   display: block;
   width: 100%;
   aspect-ratio: 0.94;
   background: #e8e5dc;
   object-fit: cover;
+}
+
+.inspiration-product-link:hover h2,
+.inspiration-product-link:focus-visible h2 {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .inspiration-details {
@@ -1544,6 +1556,20 @@ h2 em {
   justify-content: space-between;
   gap: 14px;
   padding-top: 15px;
+}
+
+.details-link {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 10px;
+  text-align: right;
+  text-underline-offset: 3px;
+}
+
+.inspiration-product-link:hover .details-link,
+.inspiration-product-link:focus-visible .details-link {
+  color: var(--ink);
+  text-decoration: underline;
 }
 
 .inspiration-reference {
@@ -1559,6 +1585,52 @@ h2 em {
   letter-spacing: -0.015em;
 }
 
+.inspiration-actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+.inspiration-image-controls {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.change-image-button,
+.reset-image-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.change-image-button:hover,
+.reset-image-button:hover {
+  color: var(--ink);
+}
+
+.inspiration-image-input {
+  display: none;
+}
+
+.inspiration-image-status {
+  flex-basis: 100%;
+  color: var(--muted);
+  font-size: 10px;
+}
+
 .inspiration-link {
   display: grid;
   width: 38px;
@@ -1569,6 +1641,23 @@ h2 em {
   border-radius: 50%;
   font-size: 14px;
   transition: background 180ms ease, color 180ms ease;
+}
+
+.collection-image-status {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  padding: 8px;
+  background: rgb(36 40 32 / 78%);
+  color: #fff;
+  font-size: 11px;
+}
+
+.product-image-status {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .inspiration-link:hover {
@@ -1742,6 +1831,16 @@ h2 em {
     align-items: start;
     gap: 8px;
     padding-top: 10px;
+  }
+
+  .inspiration-actions {
+    gap: 8px;
+  }
+
+  .change-image-button,
+  .reset-image-button,
+  .inspiration-image-status {
+    font-size: 9px;
   }
 
   .inspiration-details h2 {

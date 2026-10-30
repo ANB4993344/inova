@@ -1,6 +1,72 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector("#site-nav");
 
+let inspirationImageDatabase;
+
+const getInspirationImageDatabase = () => {
+  if (!("indexedDB" in window)) {
+    return Promise.reject(new Error("Le stockage d’images n’est pas disponible dans ce navigateur."));
+  }
+  if (!inspirationImageDatabase) {
+    inspirationImageDatabase = new Promise((resolve, reject) => {
+      const request = window.indexedDB.open("inova-inspiration-images", 1);
+      request.onupgradeneeded = () => {
+        request.result.createObjectStore("images", { keyPath: "id" });
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error || new Error("Impossible d’ouvrir le stockage des images."));
+    });
+  }
+  return inspirationImageDatabase;
+};
+
+const getInspirationImageId = (categoryKey, productNumber) => `${categoryKey}-${productNumber}`;
+
+const getSavedInspirationImage = async (categoryKey, productNumber) => {
+  const database = await getInspirationImageDatabase();
+  return new Promise((resolve, reject) => {
+    const request = database
+      .transaction("images", "readonly")
+      .objectStore("images")
+      .get(getInspirationImageId(categoryKey, productNumber));
+    request.onsuccess = () => resolve(request.result?.image);
+    request.onerror = () => reject(request.error || new Error("Impossible de charger l’image enregistrée."));
+  });
+};
+
+const saveInspirationImage = async (categoryKey, productNumber, image) => {
+  const database = await getInspirationImageDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction("images", "readwrite");
+    transaction.objectStore("images").put({
+      id: getInspirationImageId(categoryKey, productNumber),
+      image,
+    });
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error || new Error("Impossible d’enregistrer l’image."));
+    transaction.onabort = () => reject(transaction.error || new Error("L’enregistrement de l’image a été annulé."));
+  });
+};
+
+const removeSavedInspirationImage = async (categoryKey, productNumber) => {
+  const database = await getInspirationImageDatabase();
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction("images", "readwrite");
+    transaction.objectStore("images").delete(getInspirationImageId(categoryKey, productNumber));
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error || new Error("Impossible de rétablir l’image d’origine."));
+    transaction.onabort = () => reject(transaction.error || new Error("Le rétablissement de l’image a été annulé."));
+  });
+};
+
+const showSavedInspirationImage = async (imageElement, categoryKey, productNumber) => {
+  const savedImage = await getSavedInspirationImage(categoryKey, productNumber);
+  if (savedImage) {
+    imageElement.src = URL.createObjectURL(savedImage);
+  }
+  return Boolean(savedImage);
+};
+
 if (menuToggle && siteNav) {
   menuToggle.addEventListener("click", () => {
     const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
@@ -270,22 +336,11 @@ if (advisorForm) {
   });
 }
 
-const createInspirations = (existing, styles, furniture) => [
-  ...existing,
-  ...styles.flatMap((style, styleIndex) =>
-    furniture.map((item, itemIndex) => [
-      `${style} — ${item}`,
-      existing[(styleIndex * furniture.length + itemIndex) % existing.length][1],
-    ]),
-  ),
-];
-
 const categories = {
   salon: {
     title: "Le salon",
     description: "Explorez des inspirations de mobilier pour le salon : assises, tables basses et rangements. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
-    inspirations: createInspirations(
-      [
+    inspirations: [
         ["Salon convivial", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
         ["Lignes contemporaines", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"],
         ["Matières naturelles", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
@@ -295,16 +350,12 @@ const categories = {
         ["Canapé aux lignes douces", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
         ["Fauteuil de lecture", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1000&q=85"],
         ["Rangements épurés", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1000&q=85"],
-      ],
-      ["Contemporain", "Naturel", "Intemporel", "Minimaliste", "Cosy", "Méditerranéen", "Élégant", "Urbain", "Lumineux", "Graphique"],
-      ["avec canapé", "avec fauteuil", "autour de la table basse", "avec meuble TV", "avec bibliothèque"],
-    ),
+    ],
   },
   "salle-a-manger": {
     title: "La salle à manger",
     description: "Explorez des inspirations pour la salle à manger et repérez les meubles adaptés à votre espace. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
-    inspirations: createInspirations(
-      [
+    inspirations: [
         ["Repas en lumière", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"],
         ["Table de caractère", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
         ["Matières chaleureuses", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
@@ -314,16 +365,12 @@ const categories = {
         ["Table conviviale", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1000&q=85"],
         ["Buffet en bois clair", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
         ["Chaises contemporaines", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85"],
-      ],
-      ["Contemporaine", "Naturelle", "Familiale", "Intemporelle", "Élégante", "Méditerranéenne", "Minimaliste", "Chaleureuse", "Modulable", "Raffinée"],
-      ["avec table à manger", "avec chaises", "avec buffet", "avec vaisselier", "pour recevoir"],
-    ),
+    ],
   },
   chambre: {
     title: "La chambre",
     description: "Explorez des inspirations de mobilier pour la chambre : lits, tables de chevet et rangements. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
-    inspirations: createInspirations(
-      [
+    inspirations: [
         ["Douceur naturelle", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85"],
         ["Repos tout en simplicité", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
         ["Tons chaleureux", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
@@ -333,12 +380,24 @@ const categories = {
         ["Lit aux tons naturels", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
         ["Chevets tout en douceur", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85"],
         ["Rangements de chambre", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1000&q=85"],
-      ],
-      ["Naturelle", "Apaisante", "Contemporaine", "Intemporelle", "Douce", "Élégante", "Minimaliste", "Cosy", "Lumineuse", "Méditerranéenne"],
-      ["avec lit", "avec tables de chevet", "avec commode", "avec armoire", "avec tête de lit"],
-    ),
+    ],
   },
 };
+
+document.querySelectorAll(".collection-card[href*='category=']").forEach((card) => {
+  const categoryKey = new URL(card.href).searchParams.get("category");
+  const image = card.querySelector("img");
+  if (!categoryKey || !image) {
+    return;
+  }
+  showSavedInspirationImage(image, categoryKey, 1).catch(() => {
+    const imageStatus = document.createElement("span");
+    imageStatus.className = "collection-image-status";
+    imageStatus.setAttribute("role", "status");
+    imageStatus.textContent = "Impossible de charger l’image personnalisée.";
+    card.append(imageStatus);
+  });
+});
 
 const categoryGallery = document.querySelector("#category-gallery");
 
@@ -361,7 +420,7 @@ if (categoryGallery) {
       categoryTitle.textContent = category.title;
     }
     if (categoryDescription) {
-      categoryDescription.textContent = `${category.description} ${category.inspirations.length} inspirations sont à découvrir.`;
+      categoryDescription.textContent = `${category.description} ${category.inspirations.length} inspirations sont à découvrir. Utilisez « Changer l’image » sous une fiche pour choisir une photo enregistrée sur cet appareil.`;
     }
     if (currentBreadcrumb) {
       currentBreadcrumb.textContent = category.title;
@@ -377,16 +436,17 @@ if (categoryGallery) {
     category.inspirations.forEach(([name, imageUrl], index) => {
       const card = document.createElement("article");
       card.className = "inspiration-card";
-      const productUrl = `produit.html?category=${encodeURIComponent(categoryKey)}&product=${String(index + 1).padStart(2, "0")}`;
-      const imageLink = document.createElement("a");
-      imageLink.className = "inspiration-image-link";
-      imageLink.href = productUrl;
-      imageLink.setAttribute("aria-label", `Voir l’inspiration ${name}`);
+      const productNumber = index + 1;
+      const productUrl = `produit.html?category=${encodeURIComponent(categoryKey)}&product=${String(productNumber).padStart(2, "0")}`;
+      const productLink = document.createElement("a");
+      productLink.className = "inspiration-product-link";
+      productLink.href = productUrl;
+      productLink.setAttribute("aria-label", `Voir la fiche produit ${name}`);
       const image = document.createElement("img");
       image.src = imageUrl;
       image.alt = `${name} — inspiration ${category.title.toLowerCase()}`;
       image.loading = "lazy";
-      imageLink.append(image);
+      productLink.append(image);
       const details = document.createElement("div");
       details.className = "inspiration-details";
       const text = document.createElement("div");
@@ -394,17 +454,84 @@ if (categoryGallery) {
       reference.className = "inspiration-reference";
       reference.textContent = `Réf. inspiration IN-${categoryKey === "salle-a-manger" ? "SAM" : categoryKey === "chambre" ? "CH" : "SAL"}-${String(index + 1).padStart(2, "0")}`;
       const heading = document.createElement("h2");
-      const titleLink = document.createElement("a");
-      titleLink.href = productUrl;
-      titleLink.textContent = name;
-      heading.append(titleLink);
+      heading.textContent = name;
       text.append(reference, heading);
+      const detailsLink = document.createElement("span");
+      detailsLink.className = "details-link";
+      detailsLink.textContent = "Voir l’inspiration";
+      details.append(text, detailsLink);
+      productLink.append(details);
       const actions = document.createElement("div");
       actions.className = "inspiration-actions";
-      const detailsLink = document.createElement("a");
-      detailsLink.className = "details-link";
-      detailsLink.href = productUrl;
-      detailsLink.textContent = "Voir l’inspiration";
+      const imageControls = document.createElement("div");
+      imageControls.className = "inspiration-image-controls";
+      const changeImage = document.createElement("button");
+      changeImage.className = "change-image-button";
+      changeImage.type = "button";
+      changeImage.textContent = "Changer l’image";
+      changeImage.setAttribute("aria-label", `Changer l’image de ${name}`);
+      const imageInput = document.createElement("input");
+      imageInput.className = "inspiration-image-input";
+      imageInput.type = "file";
+      imageInput.accept = "image/jpeg,image/png,image/webp";
+      imageInput.tabIndex = -1;
+      imageInput.setAttribute("aria-label", `Choisir une nouvelle image pour ${name}`);
+      const imageStatus = document.createElement("span");
+      imageStatus.className = "inspiration-image-status";
+      imageStatus.setAttribute("role", "status");
+      imageStatus.setAttribute("aria-live", "polite");
+      const resetImage = document.createElement("button");
+      resetImage.className = "reset-image-button";
+      resetImage.type = "button";
+      resetImage.textContent = "Rétablir l’image";
+      resetImage.hidden = true;
+
+      showSavedInspirationImage(image, categoryKey, productNumber)
+        .then((hasSavedImage) => {
+          resetImage.hidden = !hasSavedImage;
+        })
+        .catch(() => {
+          imageStatus.textContent = "Impossible de charger l’image enregistrée.";
+        });
+
+      changeImage.addEventListener("click", () => imageInput.click());
+      imageInput.addEventListener("change", async () => {
+        const selectedImage = imageInput.files?.[0];
+        if (!selectedImage) {
+          return;
+        }
+        if (!["image/jpeg", "image/png", "image/webp"].includes(selectedImage.type)) {
+          imageStatus.textContent = "Choisissez une image JPG, PNG ou WebP.";
+          imageInput.value = "";
+          return;
+        }
+        if (selectedImage.size > 10 * 1024 * 1024) {
+          imageStatus.textContent = "L’image doit faire 10 Mo ou moins.";
+          imageInput.value = "";
+          return;
+        }
+        try {
+          await saveInspirationImage(categoryKey, productNumber, selectedImage);
+          image.src = URL.createObjectURL(selectedImage);
+          imageStatus.textContent = "Image enregistrée sur cet appareil.";
+          resetImage.hidden = false;
+        } catch (error) {
+          imageStatus.textContent = error instanceof Error ? error.message : "Impossible d’enregistrer cette image.";
+        }
+        imageInput.value = "";
+      });
+      resetImage.addEventListener("click", async () => {
+        try {
+          await removeSavedInspirationImage(categoryKey, productNumber);
+          image.src = imageUrl;
+          imageStatus.textContent = "Image d’origine rétablie.";
+          resetImage.hidden = true;
+        } catch (error) {
+          imageStatus.textContent = error instanceof Error ? error.message : "Impossible de rétablir l’image d’origine.";
+        }
+      });
+      imageControls.append(changeImage, imageInput, resetImage, imageStatus);
+
       const link = document.createElement("a");
       link.className = "inspiration-link";
       link.href = `https://wa.me/33665201297?text=${encodeURIComponent(`Bonjour Inova, pouvez-vous me renseigner sur l'inspiration ${String(index + 1).padStart(2, "0")} pour ${category.title.toLowerCase()} ?`)}`;
@@ -412,9 +539,8 @@ if (categoryGallery) {
       link.rel = "noreferrer";
       link.setAttribute("aria-label", `Demander des détails sur ${name}`);
       link.textContent = "↗";
-      actions.append(detailsLink, link);
-      details.append(text, actions);
-      card.append(imageLink, details);
+      actions.append(imageControls, link);
+      card.append(productLink, actions);
       categoryGallery.append(card);
     });
   }
@@ -459,6 +585,13 @@ if (productDetails) {
     if (productImage) {
       productImage.src = imageUrl;
       productImage.alt = `${name}, inspiration pour ${category.title.toLowerCase()}`;
+      showSavedInspirationImage(productImage, categoryKey, productNumber).catch(() => {
+        const imageStatus = document.createElement("p");
+        imageStatus.className = "product-image-status";
+        imageStatus.setAttribute("role", "status");
+        imageStatus.textContent = "Impossible de charger une image personnalisée.";
+        productImage.parentElement?.append(imageStatus);
+      });
     }
     if (categoryBreadcrumb) {
       categoryBreadcrumb.textContent = category.title;
@@ -497,9 +630,22 @@ if (productDetails) {
       link.className = "related-product";
       link.href = `produit.html?category=${encodeURIComponent(categoryKey)}&product=${String(index + 1).padStart(2, "0")}`;
       const image = document.createElement("img");
-      image.src = relatedImage.replace("w=1400", "w=700");
       image.alt = relatedName;
       image.loading = "lazy";
+      showSavedInspirationImage(image, categoryKey, index + 1)
+        .then((hasSavedImage) => {
+          if (!hasSavedImage) {
+            image.src = relatedImage.replace("w=1400", "w=700");
+          }
+        })
+        .catch(() => {
+          image.src = relatedImage.replace("w=1400", "w=700");
+          const imageStatus = document.createElement("span");
+          imageStatus.className = "related-image-status";
+          imageStatus.setAttribute("role", "status");
+          imageStatus.textContent = "Impossible de charger l’image personnalisée.";
+          link.append(imageStatus);
+        });
       const title = document.createElement("span");
       title.textContent = relatedName;
       link.append(image, title);
