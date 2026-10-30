@@ -1,72 +1,6 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const siteNav = document.querySelector("#site-nav");
 
-let inspirationImageDatabase;
-
-const getInspirationImageDatabase = () => {
-  if (!("indexedDB" in window)) {
-    return Promise.reject(new Error("Le stockage d’images n’est pas disponible dans ce navigateur."));
-  }
-  if (!inspirationImageDatabase) {
-    inspirationImageDatabase = new Promise((resolve, reject) => {
-      const request = window.indexedDB.open("inova-inspiration-images", 1);
-      request.onupgradeneeded = () => {
-        request.result.createObjectStore("images", { keyPath: "id" });
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error || new Error("Impossible d’ouvrir le stockage des images."));
-    });
-  }
-  return inspirationImageDatabase;
-};
-
-const getInspirationImageId = (categoryKey, productNumber) => `${categoryKey}-${productNumber}`;
-
-const getSavedInspirationImage = async (categoryKey, productNumber) => {
-  const database = await getInspirationImageDatabase();
-  return new Promise((resolve, reject) => {
-    const request = database
-      .transaction("images", "readonly")
-      .objectStore("images")
-      .get(getInspirationImageId(categoryKey, productNumber));
-    request.onsuccess = () => resolve(request.result?.image);
-    request.onerror = () => reject(request.error || new Error("Impossible de charger l’image enregistrée."));
-  });
-};
-
-const saveInspirationImage = async (categoryKey, productNumber, image) => {
-  const database = await getInspirationImageDatabase();
-  return new Promise((resolve, reject) => {
-    const transaction = database.transaction("images", "readwrite");
-    transaction.objectStore("images").put({
-      id: getInspirationImageId(categoryKey, productNumber),
-      image,
-    });
-    transaction.oncomplete = () => resolve();
-    transaction.onerror = () => reject(transaction.error || new Error("Impossible d’enregistrer l’image."));
-    transaction.onabort = () => reject(transaction.error || new Error("L’enregistrement de l’image a été annulé."));
-  });
-};
-
-const removeSavedInspirationImage = async (categoryKey, productNumber) => {
-  const database = await getInspirationImageDatabase();
-  return new Promise((resolve, reject) => {
-    const transaction = database.transaction("images", "readwrite");
-    transaction.objectStore("images").delete(getInspirationImageId(categoryKey, productNumber));
-    transaction.oncomplete = () => resolve();
-    transaction.onerror = () => reject(transaction.error || new Error("Impossible de rétablir l’image d’origine."));
-    transaction.onabort = () => reject(transaction.error || new Error("Le rétablissement de l’image a été annulé."));
-  });
-};
-
-const showSavedInspirationImage = async (imageElement, categoryKey, productNumber) => {
-  const savedImage = await getSavedInspirationImage(categoryKey, productNumber);
-  if (savedImage) {
-    imageElement.src = URL.createObjectURL(savedImage);
-  }
-  return Boolean(savedImage);
-};
-
 if (menuToggle && siteNav) {
   menuToggle.addEventListener("click", () => {
     const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
@@ -339,65 +273,80 @@ if (advisorForm) {
 const categories = {
   salon: {
     title: "Le salon",
-    description: "Explorez des inspirations de mobilier pour le salon : assises, tables basses et rangements. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
+    description: "Explorez des inspirations de mobilier pour le salon : assises, tables basses et rangements. Les modèles, photos et disponibilités sont à confirmer auprès d’Inova.",
     inspirations: [
-        ["Salon convivial", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
-        ["Lignes contemporaines", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"],
-        ["Matières naturelles", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
-        ["Lumière et douceur", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85"],
-        ["Élégance intemporelle", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85"],
-        ["Un coin à soi", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1000&q=85"],
-        ["Canapé aux lignes douces", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
-        ["Fauteuil de lecture", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1000&q=85"],
-        ["Rangements épurés", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1000&q=85"],
+        ["Salon convivial", [
+          "images/products/salon-convivial-01.webp",
+          "images/products/salon-convivial-02.webp",
+          "images/products/salon-convivial-03.webp",
+          "images/products/salon-convivial-04.webp",
+          "images/products/salon-convivial-05.webp",
+          "images/products/salon-convivial-06.webp",
+          "images/products/salon-convivial-07.webp",
+          "images/products/salon-convivial-08.webp",
+          "images/products/salon-convivial-09.webp",
+        ]],
+        ["Lignes contemporaines", ["images/products/lignes-contemporaines-01.webp"]],
+        ["Matières naturelles", ["images/products/matieres-naturelles.webp"]],
+        ["Lumière et douceur", [
+          "images/products/lumiere-et-douceur-01.webp",
+          "images/products/lumiere-et-douceur-02.webp",
+          "images/products/lumiere-et-douceur-03.webp",
+          "images/products/lumiere-et-douceur-04.webp",
+          "images/products/lumiere-et-douceur-05.webp",
+          "images/products/lumiere-et-douceur-06.webp",
+          "images/products/lumiere-et-douceur-07.webp",
+        ]],
+        ["Élégance intemporelle", ["images/products/elegance-intemporelle.webp"]],
+        ["Un coin à soi", ["images/products/un-coin-a-soi.webp"]],
+        ["Canapé aux lignes douces", [
+          "images/products/canape-aux-lignes-douces-01.webp",
+          "images/products/canape-aux-lignes-douces-02.webp",
+          "images/products/canape-aux-lignes-douces-03.webp",
+          "images/products/canape-aux-lignes-douces-04.webp",
+        ]],
+        ["Fauteuil de lecture", [
+          "images/products/fauteuil-de-lecture-01.webp",
+          "images/products/fauteuil-de-lecture-02.webp",
+          "images/products/fauteuil-de-lecture-03.webp",
+          "images/products/fauteuil-de-lecture-04.webp",
+          "images/products/fauteuil-de-lecture-05.webp",
+          "images/products/fauteuil-de-lecture-06.webp",
+        ]],
+        ["Rangements épurés", ["images/products/rangements-epures.webp"]],
     ],
   },
   "salle-a-manger": {
     title: "La salle à manger",
-    description: "Explorez des inspirations pour la salle à manger et repérez les meubles adaptés à votre espace. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
+    description: "Explorez des inspirations pour la salle à manger et repérez les meubles adaptés à votre espace. Les modèles, photos et disponibilités sont à confirmer auprès d’Inova.",
     inspirations: [
-        ["Repas en lumière", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"],
-        ["Table de caractère", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
-        ["Matières chaleureuses", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
-        ["Esprit contemporain", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85"],
-        ["Réception élégante", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85"],
-        ["L’art de recevoir", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1000&q=85"],
-        ["Table conviviale", "https://images.unsplash.com/photo-1617104678098-de229db51175?auto=format&fit=crop&w=1000&q=85"],
-        ["Buffet en bois clair", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
-        ["Chaises contemporaines", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85"],
+        ["Repas en lumière", ["images/products/repas-en-lumiere.webp"]],
+        ["Table de caractère", ["images/products/table-de-caractere.webp"]],
+        ["Matières chaleureuses", ["images/products/matieres-chaleureuses.webp"]],
+        ["Esprit contemporain", ["images/products/esprit-contemporain.webp"]],
+        ["Réception élégante", ["images/products/reception-elegante.webp"]],
+        ["L’art de recevoir", ["images/products/art-de-recevoir.webp"]],
+        ["Table conviviale", ["images/products/table-conviviale.webp"]],
+        ["Buffet en bois clair", ["images/products/buffet-en-bois-clair.webp"]],
+        ["Chaises contemporaines", ["images/products/chaises-contemporaines.webp"]],
     ],
   },
   chambre: {
     title: "La chambre",
-    description: "Explorez des inspirations de mobilier pour la chambre : lits, tables de chevet et rangements. Les modèles et disponibilités sont à confirmer auprès d’Inova.",
+    description: "Explorez des inspirations de mobilier pour la chambre : lits, tables de chevet et rangements. Les modèles, photos et disponibilités sont à confirmer auprès d’Inova.",
     inspirations: [
-        ["Douceur naturelle", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1000&q=85"],
-        ["Repos tout en simplicité", "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1000&q=85"],
-        ["Tons chaleureux", "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=85"],
-        ["Lumière du matin", "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=85"],
-        ["Un cocon élégant", "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1000&q=85"],
-        ["Sérénité au quotidien", "https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&w=1000&q=85"],
-        ["Lit aux tons naturels", "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85"],
-        ["Chevets tout en douceur", "https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=1000&q=85"],
-        ["Rangements de chambre", "https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1000&q=85"],
+        ["Douceur naturelle", ["images/products/douceur-naturelle.webp"]],
+        ["Repos tout en simplicité", ["images/products/repos-tout-en-simplicite.webp"]],
+        ["Tons chaleureux", ["images/products/tons-chaleureux.webp"]],
+        ["Lumière du matin", ["images/products/lumiere-du-matin.webp"]],
+        ["Un cocon élégant", ["images/products/un-cocon-elegant.webp"]],
+        ["Sérénité au quotidien", ["images/products/serenite-au-quotidien.webp"]],
+        ["Lit aux tons naturels", ["images/products/lit-aux-tons-naturels.webp"]],
+        ["Chevets tout en douceur", ["images/products/chevets-tout-en-douceur.webp"]],
+        ["Rangements de chambre", ["images/products/rangements-de-chambre.webp"]],
     ],
   },
 };
-
-document.querySelectorAll(".collection-card[href*='category=']").forEach((card) => {
-  const categoryKey = new URL(card.href).searchParams.get("category");
-  const image = card.querySelector("img");
-  if (!categoryKey || !image) {
-    return;
-  }
-  showSavedInspirationImage(image, categoryKey, 1).catch(() => {
-    const imageStatus = document.createElement("span");
-    imageStatus.className = "collection-image-status";
-    imageStatus.setAttribute("role", "status");
-    imageStatus.textContent = "Impossible de charger l’image personnalisée.";
-    card.append(imageStatus);
-  });
-});
 
 const categoryGallery = document.querySelector("#category-gallery");
 
@@ -420,7 +369,7 @@ if (categoryGallery) {
       categoryTitle.textContent = category.title;
     }
     if (categoryDescription) {
-      categoryDescription.textContent = `${category.description} ${category.inspirations.length} inspirations sont à découvrir. Utilisez « Changer l’image » sous une fiche pour choisir une photo enregistrée sur cet appareil.`;
+      categoryDescription.textContent = `${category.description} ${category.inspirations.length} inspirations sont à découvrir.`;
     }
     if (currentBreadcrumb) {
       currentBreadcrumb.textContent = category.title;
@@ -433,7 +382,8 @@ if (categoryGallery) {
       }
     });
 
-    category.inspirations.forEach(([name, imageUrl], index) => {
+    category.inspirations.forEach((inspiration, index) => {
+      const [name, images = []] = Array.isArray(inspiration) ? inspiration : [inspiration, []];
       const card = document.createElement("article");
       card.className = "inspiration-card";
       const productNumber = index + 1;
@@ -442,11 +392,19 @@ if (categoryGallery) {
       productLink.className = "inspiration-product-link";
       productLink.href = productUrl;
       productLink.setAttribute("aria-label", `Voir la fiche produit ${name}`);
-      const image = document.createElement("img");
-      image.src = imageUrl;
-      image.alt = `${name} — inspiration ${category.title.toLowerCase()}`;
-      image.loading = "lazy";
-      productLink.append(image);
+      if (images.length > 0) {
+        const image = document.createElement("img");
+        image.className = "inspiration-product-image";
+        image.src = images[0];
+        image.alt = `${name} — ${category.title.toLowerCase()}`;
+        image.loading = "lazy";
+        productLink.append(image);
+      } else {
+        const imagePlaceholder = document.createElement("span");
+        imagePlaceholder.className = "inspiration-image-placeholder";
+        imagePlaceholder.setAttribute("aria-hidden", "true");
+        productLink.append(imagePlaceholder);
+      }
       const details = document.createElement("div");
       details.className = "inspiration-details";
       const text = document.createElement("div");
@@ -463,75 +421,6 @@ if (categoryGallery) {
       productLink.append(details);
       const actions = document.createElement("div");
       actions.className = "inspiration-actions";
-      const imageControls = document.createElement("div");
-      imageControls.className = "inspiration-image-controls";
-      const changeImage = document.createElement("button");
-      changeImage.className = "change-image-button";
-      changeImage.type = "button";
-      changeImage.textContent = "Changer l’image";
-      changeImage.setAttribute("aria-label", `Changer l’image de ${name}`);
-      const imageInput = document.createElement("input");
-      imageInput.className = "inspiration-image-input";
-      imageInput.type = "file";
-      imageInput.accept = "image/jpeg,image/png,image/webp";
-      imageInput.tabIndex = -1;
-      imageInput.setAttribute("aria-label", `Choisir une nouvelle image pour ${name}`);
-      const imageStatus = document.createElement("span");
-      imageStatus.className = "inspiration-image-status";
-      imageStatus.setAttribute("role", "status");
-      imageStatus.setAttribute("aria-live", "polite");
-      const resetImage = document.createElement("button");
-      resetImage.className = "reset-image-button";
-      resetImage.type = "button";
-      resetImage.textContent = "Rétablir l’image";
-      resetImage.hidden = true;
-
-      showSavedInspirationImage(image, categoryKey, productNumber)
-        .then((hasSavedImage) => {
-          resetImage.hidden = !hasSavedImage;
-        })
-        .catch(() => {
-          imageStatus.textContent = "Impossible de charger l’image enregistrée.";
-        });
-
-      changeImage.addEventListener("click", () => imageInput.click());
-      imageInput.addEventListener("change", async () => {
-        const selectedImage = imageInput.files?.[0];
-        if (!selectedImage) {
-          return;
-        }
-        if (!["image/jpeg", "image/png", "image/webp"].includes(selectedImage.type)) {
-          imageStatus.textContent = "Choisissez une image JPG, PNG ou WebP.";
-          imageInput.value = "";
-          return;
-        }
-        if (selectedImage.size > 10 * 1024 * 1024) {
-          imageStatus.textContent = "L’image doit faire 10 Mo ou moins.";
-          imageInput.value = "";
-          return;
-        }
-        try {
-          await saveInspirationImage(categoryKey, productNumber, selectedImage);
-          image.src = URL.createObjectURL(selectedImage);
-          imageStatus.textContent = "Image enregistrée sur cet appareil.";
-          resetImage.hidden = false;
-        } catch (error) {
-          imageStatus.textContent = error instanceof Error ? error.message : "Impossible d’enregistrer cette image.";
-        }
-        imageInput.value = "";
-      });
-      resetImage.addEventListener("click", async () => {
-        try {
-          await removeSavedInspirationImage(categoryKey, productNumber);
-          image.src = imageUrl;
-          imageStatus.textContent = "Image d’origine rétablie.";
-          resetImage.hidden = true;
-        } catch (error) {
-          imageStatus.textContent = error instanceof Error ? error.message : "Impossible de rétablir l’image d’origine.";
-        }
-      });
-      imageControls.append(changeImage, imageInput, resetImage, imageStatus);
-
       const link = document.createElement("a");
       link.className = "inspiration-link";
       link.href = `https://wa.me/33665201297?text=${encodeURIComponent(`Bonjour Inova, pouvez-vous me renseigner sur l'inspiration ${String(index + 1).padStart(2, "0")} pour ${category.title.toLowerCase()} ?`)}`;
@@ -539,7 +428,7 @@ if (categoryGallery) {
       link.rel = "noreferrer";
       link.setAttribute("aria-label", `Demander des détails sur ${name}`);
       link.textContent = "↗";
-      actions.append(imageControls, link);
+      actions.append(link);
       card.append(productLink, actions);
       categoryGallery.append(card);
     });
@@ -553,7 +442,8 @@ if (productDetails) {
   const categoryKey = params.get("category");
   const productNumber = Number(params.get("product"));
   const category = categoryKey ? categories[categoryKey] : undefined;
-  const product = category && Number.isInteger(productNumber) ? category.inspirations[productNumber - 1] : undefined;
+  const inspiration = category && Number.isInteger(productNumber) ? category.inspirations[productNumber - 1] : undefined;
+  const product = Array.isArray(inspiration) ? inspiration : inspiration ? [inspiration, []] : undefined;
   const errorMessage = document.querySelector("#product-error");
   const relatedSection = document.querySelector(".related-section");
 
@@ -568,8 +458,8 @@ if (productDetails) {
   } else {
     const referencePrefix = categoryKey === "salle-a-manger" ? "SAM" : categoryKey === "chambre" ? "CH" : "SAL";
     const reference = `IN-${referencePrefix}-${String(productNumber).padStart(2, "0")}`;
-    const [name, imageUrl] = product;
-    const productImage = document.querySelector("#product-image");
+    const [name, productImages] = product;
+    const productImageWrap = document.querySelector(".product-image-wrap");
     const categoryBreadcrumb = document.querySelector("#product-category-breadcrumb");
     const currentBreadcrumb = document.querySelector("#product-breadcrumb-current");
     const productCategory = document.querySelector("#product-category");
@@ -582,17 +472,49 @@ if (productDetails) {
     const relatedCategoryLink = document.querySelector("#related-category-link");
 
     document.title = `${name} — Inova`;
-    if (productImage) {
-      productImage.src = imageUrl;
-      productImage.alt = `${name}, inspiration pour ${category.title.toLowerCase()}`;
-      showSavedInspirationImage(productImage, categoryKey, productNumber).catch(() => {
-        const imageStatus = document.createElement("p");
-        imageStatus.className = "product-image-status";
-        imageStatus.setAttribute("role", "status");
-        imageStatus.textContent = "Impossible de charger une image personnalisée.";
-        productImage.parentElement?.append(imageStatus);
-      });
+    if (productImageWrap) {
+      productImageWrap.setAttribute("aria-label", `Photos de ${name}`);
+      if (productImages.length > 0) {
+        productImageWrap.replaceChildren();
+        const gallery = document.createElement("div");
+        gallery.className = "product-image-gallery";
+        const mainImage = document.createElement("img");
+        mainImage.className = "product-gallery-main-image";
+        mainImage.src = productImages[0];
+        mainImage.alt = `${name} — vue 1`;
+        gallery.append(mainImage);
+
+        if (productImages.length > 1) {
+          const thumbnails = document.createElement("div");
+          thumbnails.className = "product-image-thumbnails";
+          thumbnails.setAttribute("aria-label", `Photos de ${name}`);
+          productImages.forEach((imageUrl, index) => {
+            const thumbnail = document.createElement("button");
+            thumbnail.className = "product-image-thumbnail";
+            thumbnail.type = "button";
+            thumbnail.setAttribute("aria-label", `Afficher la photo ${index + 1} de ${name}`);
+            thumbnail.setAttribute("aria-pressed", String(index === 0));
+            const thumbnailImage = document.createElement("img");
+            thumbnailImage.src = imageUrl;
+            thumbnailImage.alt = "";
+            thumbnailImage.loading = "lazy";
+            thumbnail.append(thumbnailImage);
+            thumbnail.addEventListener("click", () => {
+              mainImage.src = imageUrl;
+              mainImage.alt = `${name} — vue ${index + 1}`;
+              thumbnails.querySelectorAll(".product-image-thumbnail").forEach((item) => {
+                item.setAttribute("aria-pressed", String(item === thumbnail));
+              });
+            });
+            thumbnails.append(thumbnail);
+          });
+          gallery.append(thumbnails);
+        }
+
+        productImageWrap.append(gallery);
+      }
     }
+
     if (categoryBreadcrumb) {
       categoryBreadcrumb.textContent = category.title;
       categoryBreadcrumb.href = `categorie.html?category=${encodeURIComponent(categoryKey)}`;
@@ -622,34 +544,98 @@ if (productDetails) {
       productContact.href = `https://wa.me/33665201297?text=${encodeURIComponent(`Bonjour Inova, cette inspiration mobilier m'intéresse (${reference}). Pouvez-vous m'indiquer les meubles disponibles, leurs dimensions et leurs prix ?`)}`;
     }
 
-    category.inspirations.forEach(([relatedName, relatedImage], index) => {
+    category.inspirations.forEach((relatedInspiration, index) => {
       if (index + 1 === productNumber || relatedProducts.children.length >= 4) {
         return;
       }
+      const [relatedName, relatedImages = []] = Array.isArray(relatedInspiration)
+        ? relatedInspiration
+        : [relatedInspiration, []];
       const link = document.createElement("a");
       link.className = "related-product";
       link.href = `produit.html?category=${encodeURIComponent(categoryKey)}&product=${String(index + 1).padStart(2, "0")}`;
-      const image = document.createElement("img");
-      image.alt = relatedName;
-      image.loading = "lazy";
-      showSavedInspirationImage(image, categoryKey, index + 1)
-        .then((hasSavedImage) => {
-          if (!hasSavedImage) {
-            image.src = relatedImage.replace("w=1400", "w=700");
-          }
-        })
-        .catch(() => {
-          image.src = relatedImage.replace("w=1400", "w=700");
-          const imageStatus = document.createElement("span");
-          imageStatus.className = "related-image-status";
-          imageStatus.setAttribute("role", "status");
-          imageStatus.textContent = "Impossible de charger l’image personnalisée.";
-          link.append(imageStatus);
-        });
+      const relatedVisual = relatedImages.length > 0
+        ? document.createElement("img")
+        : document.createElement("span");
+      if (relatedImages.length > 0) {
+        relatedVisual.src = relatedImages[0];
+        relatedVisual.alt = relatedName;
+        relatedVisual.loading = "lazy";
+      } else {
+        relatedVisual.className = "related-image-placeholder";
+        relatedVisual.setAttribute("aria-hidden", "true");
+      }
       const title = document.createElement("span");
       title.textContent = relatedName;
-      link.append(image, title);
+      link.append(relatedVisual, title);
       relatedProducts.append(link);
     });
   }
 }
+
+const magnifier = document.createElement("div");
+magnifier.className = "image-magnifier";
+magnifier.setAttribute("aria-hidden", "true");
+magnifier.hidden = true;
+document.body.append(magnifier);
+
+const magnifierSize = 176;
+const magnification = 2.2;
+let magnifiedImage = null;
+
+document.querySelectorAll("img").forEach((image) => {
+  image.classList.add("image-zoomable");
+});
+
+const hideMagnifier = () => {
+  magnifier.hidden = true;
+  magnifiedImage = null;
+};
+
+const updateMagnifier = (event) => {
+  if (!magnifiedImage) {
+    return;
+  }
+
+  const imageBounds = magnifiedImage.getBoundingClientRect();
+  const imageX = Math.max(0, Math.min(event.clientX - imageBounds.left, imageBounds.width));
+  const imageY = Math.max(0, Math.min(event.clientY - imageBounds.top, imageBounds.height));
+  const lensX = Math.max(8, Math.min(event.clientX + 18, window.innerWidth - magnifierSize - 8));
+  const lensY = Math.max(8, Math.min(event.clientY + 18, window.innerHeight - magnifierSize - 8));
+
+  magnifier.style.left = `${lensX}px`;
+  magnifier.style.top = `${lensY}px`;
+  magnifier.style.backgroundImage = `url("${new URL(magnifiedImage.currentSrc || magnifiedImage.src, document.baseURI).href}")`;
+  magnifier.style.backgroundSize = `${imageBounds.width * magnification}px ${imageBounds.height * magnification}px`;
+  magnifier.style.backgroundPosition = `${magnifierSize / 2 - imageX * magnification}px ${magnifierSize / 2 - imageY * magnification}px`;
+};
+
+document.addEventListener("pointerover", (event) => {
+  if (event.pointerType !== "mouse" || !(event.target instanceof HTMLImageElement)) {
+    return;
+  }
+
+  const imageBounds = event.target.getBoundingClientRect();
+  if (imageBounds.width < 80 || imageBounds.height < 80) {
+    return;
+  }
+
+  magnifiedImage = event.target;
+  magnifier.hidden = false;
+  updateMagnifier(event);
+});
+
+document.addEventListener("pointermove", (event) => {
+  if (event.pointerType === "mouse" && magnifiedImage) {
+    updateMagnifier(event);
+  }
+});
+
+document.addEventListener("pointerout", (event) => {
+  if (event.target === magnifiedImage) {
+    hideMagnifier();
+  }
+});
+
+window.addEventListener("scroll", hideMagnifier, { passive: true });
+window.addEventListener("resize", hideMagnifier);
