@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta
       name="description"
       content="Inova est spécialisée dans le mobilier d’intérieur et basée à Nice, en France. Découvrez nos meubles pour le salon, la salle à manger et la chambre."
@@ -19,6 +19,7 @@
     <script src="script.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
     <header class="site-header">
       <a class="brand" href="#accueil" aria-label="Inova, accueil">
         <span class="brand-name"><strong>inova</strong></span>
@@ -44,7 +45,7 @@
       </nav>
     </header>
 
-    <main>
+    <main id="contenu">
       <section class="hero" id="accueil">
         <div class="hero-text">
           <p class="eyebrow"><span></span> Mobilier d’intérieur à Nice</p>
@@ -64,7 +65,7 @@
           </ul>
         </div>
         <figure class="hero-photo">
-          <img class="no-zoom" src="rendez-vous-clients.jpg" alt="Rendez-vous conseil entre des clients et un conseiller Inova autour d’une table" />
+          <img class="no-zoom" width="969" height="1449" fetchpriority="high" src="rendez-vous-clients.jpg" alt="Rendez-vous conseil entre des clients et un conseiller Inova autour d’une table" />
           <figcaption><strong>Un rendez-vous, un projet.</strong>Nous prenons le temps d’écouter vos besoins.</figcaption>
         </figure>
       </section>
@@ -98,14 +99,6 @@
               votre style, votre usage et vos priorités pour vous proposer
               une première feuille de route mobilier.
             </p>
-            <div class="advisor-note">
-              <span class="advisor-note-mark" aria-hidden="true">i</span>
-              <p>
-                Conseil guidé, sans IA connectée : vos réponses restent dans
-                votre navigateur. Rien n’est enregistré ; vous choisissez
-                vous-même si vous souhaitez transmettre le récapitulatif à Inova.
-              </p>
-            </div>
           </div>
 
           <div class="advisor-panel">
@@ -116,9 +109,9 @@
               aria-expanded="false"
               aria-controls="advisor-content"
             >
-              <span class="advisor-avatar" aria-hidden="true">IN</span>
+              <img class="advisor-avatar" src="images/conseiller-jean-marck.webp" alt="" />
               <div>
-                <p>Votre conseiller mobilier Inova</p>
+                <p>Jean Marck · conseiller mobilier</p>
                 <span>Un diagnostic guidé, étape par étape</span>
               </div>
               <span class="advisor-status"><span></span> Conseil personnalisé</span>

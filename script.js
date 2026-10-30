@@ -9,12 +9,33 @@ if (menuToggle && siteNav) {
     siteNav.classList.toggle("is-open", !isExpanded);
   });
 
-  siteNav.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Ouvrir le menu");
-      siteNav.classList.remove("is-open");
-    });
+  const closeMenu = (returnFocus = false) => {
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Ouvrir le menu");
+    siteNav.classList.remove("is-open");
+    if (returnFocus) {
+      menuToggle.focus();
+    }
+  };
+
+  siteNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => closeMenu()));
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && siteNav.classList.contains("is-open")) {
+      closeMenu(true);
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (siteNav.classList.contains("is-open") && !siteNav.contains(event.target) && !menuToggle.contains(event.target)) {
+      closeMenu();
+    }
+  });
+
+  window.matchMedia("(min-width: 1025px)").addEventListener("change", (event) => {
+    if (event.matches) {
+      closeMenu();
+    }
   });
 }
 
@@ -34,6 +55,13 @@ if (advisorForm) {
   if (advisorPanel && advisorToggle && advisorContent) {
     advisorPanel.classList.add("is-floating");
     advisorPanel.parentElement?.classList.add("is-widget-layout");
+    document.body.classList.add("has-advisor");
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && advisorToggle.getAttribute("aria-expanded") === "true") {
+        advisorToggle.click();
+        advisorToggle.focus();
+      }
+    });
     advisorToggle.addEventListener("click", () => {
       const isExpanded = advisorToggle.getAttribute("aria-expanded") === "true";
       advisorToggle.setAttribute("aria-expanded", String(!isExpanded));

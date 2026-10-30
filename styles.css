@@ -1997,7 +1997,13 @@ h1,h2,h3,blockquote{font-weight:600}
 .advisor-panel.is-floating .advisor-avatar {
   grid-column: 1;
   grid-row: 1 / 3;
+  display: block;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  object-fit: cover;
   border: 1px solid rgb(255 255 255 / 80%);
+  border-radius: 50%;
   background: linear-gradient(145deg, #314d68, #647bea 72%, #9a7be8);
   box-shadow: 0 0 0 4px rgb(120 151 245 / 10%), 0 5px 16px rgb(65 87 160 / 22%);
 }
@@ -2083,4 +2089,95 @@ h1,h2,h3,blockquote{font-weight:600}
       box-shadow: 0 0 0 5px rgb(95 154 138 / 5%);
     }
   }
+}
+
+/* ===== Adaptation mobile / tablette / ordinateur =====
+   Ce bloc est volontairement placé en dernier : il corrige les conflits entre
+   les couches précédentes. Ordre des media queries : du plus large au plus étroit. */
+html{-webkit-text-size-adjust:100%;scroll-padding-top:104px}
+img{max-width:100%;height:auto}
+.skip-link{position:absolute;top:-64px;left:12px;z-index:100;padding:12px 18px;border-radius:8px;background:var(--green);color:#fff;font-size:15px;transition:top .15s ease}
+.skip-link:focus{top:12px}
+.site-header{top:max(10px,env(safe-area-inset-top))}
+.breadcrumbs{flex-wrap:wrap;gap:6px 11px}
+.legal-page a,.contact-email,.legal-details dd{overflow-wrap:anywhere}
+.advisor-panel.is-floating{max-height:min(82vh,760px);max-height:min(82dvh,760px)}
+.advisor-form select,.advisor-form input{font-size:16px}
+.category-tabs{scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.category-tabs::-webkit-scrollbar{display:none}
+.category-tabs a{padding:10px 2px 12px;scroll-snap-align:start}
+
+/* Conseiller flottant : tons gris ciel uniquement */
+.advisor-panel.is-floating{background:linear-gradient(145deg,#fff,var(--sky-soft)) padding-box,linear-gradient(125deg,var(--sky),var(--olive)) border-box;box-shadow:0 18px 55px rgb(28 39 51 / 20%)}
+.advisor-panel.is-floating .advisor-avatar{background:var(--green);box-shadow:0 0 0 4px rgb(95 126 148 / 14%)}
+.advisor-panel.is-floating .advisor-toggle-icon{border-color:rgb(95 126 148 / 45%);background:#fff;box-shadow:none;color:var(--green)}
+.advisor-panel.is-floating .advisor-panel-heading:hover .advisor-toggle-icon{background:var(--sky-soft);box-shadow:0 0 0 4px rgb(95 126 148 / 14%)}
+.advisor-panel.is-floating .advisor-status{border-color:var(--sky);background:var(--sky-soft);color:var(--green)}
+.advisor-panel.is-floating .advisor-status>span{background:var(--olive);box-shadow:0 0 0 3px rgb(95 126 148 / 16%)}
+.advisor-panel.is-floating .advisor-content{border-top-color:var(--line);background:rgb(255 255 255 / 60%)}
+
+/* Pied de page : même rendu sur toutes les pages, quel que soit l'ordre du HTML */
+.site-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 32px;padding:28px max(7.2%,calc((100% - 1120px)/2))}
+.footer-brand{order:1}
+.site-footer>p{order:2;flex:1 1 200px;max-width:none;margin:0;text-align:left}
+.footer-legal{order:3;flex-direction:row;gap:6px 22px}
+.back-to-top{order:4}
+.copyright{order:5}
+.footer-legal a,.back-to-top{display:inline-block;padding:8px 0}
+body.has-advisor .site-footer{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+
+/* Écrans tactiles : pas de survol « collé » */
+@media (hover:none){
+  .button:hover,.inspiration-card:hover{transform:none}
+  .collection-card:hover img{transform:none}
+}
+
+/* Tablette et en dessous : menu burger (le menu complet ne tient pas avant 1025 px) */
+@media (max-width:1024px){
+  .menu-toggle{display:flex;width:46px;height:46px;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);border-radius:50%;background:#fff;cursor:pointer}
+  .menu-toggle span{width:18px;height:1.5px;background:var(--green);transition:transform .18s ease}
+  .menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(3.75px) rotate(45deg)}
+  .menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-3.75px) rotate(-45deg)}
+  .site-nav{position:absolute;top:calc(100% + 8px);right:0;left:0;display:none;flex-direction:column;align-items:stretch;gap:0;max-height:calc(100vh - 110px);max-height:calc(100dvh - 110px);overflow-y:auto;padding:8px 22px 20px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:var(--shadow)}
+  .site-nav.is-open{display:flex}
+  .site-nav>a:not(.nav-cta){padding:16px 0;border-bottom:1px solid var(--line)}
+  .nav-cta{min-height:50px;justify-content:space-between;margin-top:14px}
+}
+@media (min-width:561px) and (max-width:1024px){
+  .trust-bar{grid-template-columns:1fr 1fr}
+}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;gap:32px;padding:32px 6% 48px}
+  .hero-text{max-width:none}
+  .hero-photo{width:100%;max-width:440px;justify-self:center}
+  .product-layout{grid-template-columns:1fr;gap:28px}
+  .product-info{padding:0}
+}
+
+@media (max-width:800px){
+  .collection-card,.collection-card-large,.collection-card-tall,.collection-card-wide{height:340px}
+  .steps-grid{grid-template-columns:1fr}
+  .about{grid-template-columns:1fr;gap:36px}
+  .site-footer{padding-right:6%;padding-left:6%}
+  .inspiration-card{position:relative}
+  .inspiration-actions{position:absolute;top:10px;right:10px;padding:0}
+  .inspiration-link{width:44px;height:44px;border-color:transparent;background:rgb(255 255 255 / 92%);box-shadow:var(--shadow)}
+  .details-link{display:none}
+}
+
+@media (max-width:560px){
+  .site-header{width:calc(100% - 20px);min-height:64px;padding:0 9px 0 20px}
+  .brand-name{font-size:24px}
+  .hero{padding:24px 6% 40px}
+  .hero-actions .button{width:100%}
+  .hero-photo figcaption{right:8px;bottom:16px;left:8px;max-width:none;font-size:13px}
+  .collection-card,.collection-card-large,.collection-card-tall,.collection-card-wide{height:280px}
+  .card-caption{font-size:22px}
+  .quote-band{padding:56px 6%}
+  .contact-inner{padding:64px 20px}
+  .advisor-panel.is-floating{right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));left:max(10px,env(safe-area-inset-left));width:auto}
+  .advisor-panel.is-floating.is-open{max-height:calc(100dvh - 20px)}
+  .site-footer{flex-direction:column;align-items:flex-start}
+  .site-footer>p{flex:0 0 auto}
 }
